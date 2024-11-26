@@ -22,31 +22,35 @@ type Url struct {
 	ExpiresAt time.Time `db:"expires_at"`
 }
 
-func Create(ctx context.Context, db *Database, u *url.URL) (string, error) {
+func Create(ctx context.Context, db *Database, u *url.URL) (string, time.Time, error) {
 	queryUrl, err := GetUrlByUrl(ctx, db, u)
 	if err != nil {
 		if !errors.Is(sql.ErrNoRows, err) {
-			return "", err
+			return "", time.Time{}, err
 		}
 	}
 
 	if queryUrl != nil {
-		return queryUrl.Slug, nil
+		return queryUrl.Slug, time.Time{}, nil
 	}
 
 	r := rand.Int64N(math.MaxInt64)
 	encode := base62.FormatInt(r)
 	expiresAt := time.Now().Add(time.Hour * 720 * 3)
 
-	query := `INSERT INTO urls(id, slug, url, expires_at) VALUES ($1, $2, $3, $4)`
+	if exists, err := GetUrlBySlug(ctx, db, string(encode)); exists != nil || err == nil {
+		return Create(ctx, db, u)
+	}
+
+	query := `INSERT INTO urls(slug, url, expires_at) VALUES ($1, $2, $3)`
 
 	tx := db.Db.MustBegin()
 
-	tx.MustExecContext(ctx, query, r, string(encode), u.String(), expiresAt)
+	tx.MustExecContext(ctx, query, string(encode), u.String(), expiresAt)
 
 	if err := tx.Commit(); err != nil {
-		return "", err
+		return "", time.Time{}, err
 	}
 
-	return string(encode), nil
+	return string(encode), expiresAt, nil
 }
