@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"database/sql"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +24,7 @@ func (h *Handlers) Info(c *gin.Context) {
 
 	url, err := database.GetUrlBySlug(c.Request.Context(), h.db, form.Slug)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
