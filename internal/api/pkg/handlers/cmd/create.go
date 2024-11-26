@@ -38,11 +38,16 @@ func (h *Handlers) Create(c *gin.Context) {
 		return
 	}
 
-	slug, err := database.Create(c.Request.Context(), h.db, u)
+	slug, expirationDate, err := database.Create(c.Request.Context(), h.db, u)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"url": fmt.Sprintf("%s://%s/%s", "http", "localhost", slug)})
+	c.JSON(
+		http.StatusOK, gin.H{
+			"url":             fmt.Sprintf("%s://%s:%s/%s", h.config.Server.Scheme, h.config.Server.Host, h.config.Server.Port, slug),
+			"expiration_date": expirationDate,
+		},
+	)
 }

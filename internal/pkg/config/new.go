@@ -11,6 +11,8 @@ type ServerConfig struct {
 	Port     string
 	Mode     string
 	LogLevel string
+	Scheme   string
+	Host     string
 }
 
 type DatabaseConfig struct {

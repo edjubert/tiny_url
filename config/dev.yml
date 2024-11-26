@@ -1,5 +1,7 @@
 server:
   port: 3000
+  scheme: http
+  host: localhost
   mode: debug
   log_level: trace
 
