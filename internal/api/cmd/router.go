@@ -24,5 +24,6 @@ func Router(conf *config.Configuration, db *database.Database) *gin.Engine {
 
 	h := cmd.New(conf, db)
 
+	app.POST("/create", h.Create)
 	return app
 }
