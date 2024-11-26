@@ -26,6 +26,7 @@ func Router(conf *config.Configuration, db *database.Database) *gin.Engine {
 
 	app.POST("/create", h.Create)
 	app.POST("/extend", h.Extend)
+	app.POST("/info", h.Info)
 	app.GET("/:slug", h.SlugRedirect)
 
 	return app
