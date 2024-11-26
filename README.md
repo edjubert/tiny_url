@@ -55,3 +55,9 @@ The API will return the new expiration date
 
 > [!NOTE]
 > If the slug does not exist, it will return an error
+
+### Get information about a slug 
+Run the following POST request:
+```bash
+curl http://localhost:3000/info -X POST -d '{"slug": "<YOUR_SLUG>"}'
+```
