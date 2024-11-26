@@ -1,0 +1,12 @@
+server:
+  port: 3000
+  mode: debug
+  log_level: trace
+
+database:
+  driver: pgx
+  port: 5432
+  dbname: tiny_url
+  host: postgres
+  username: user
+  password: password
