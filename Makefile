@@ -7,11 +7,11 @@ run:
 build-docker:
 	docker compose build
 
-run-docker: build-docker
+start-docker: build-docker
 	docker compose up -d
 
 stop-docker:
 	docker compose stop
 
-restart-docker: stop-docker run-docker
+restart-docker: stop-docker start-docker
 
