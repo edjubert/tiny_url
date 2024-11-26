@@ -22,7 +22,7 @@ func Router(conf *config.Configuration, db *database.Database) *gin.Engine {
 
 	app.Use(gin.Recovery())
 
-	_ := cmd.New(conf, db)
+	h := cmd.New(conf, db)
 
 	return app
 }
